@@ -1,26 +1,8 @@
 use bevy::prelude::*;
-use super::debug::*;
+use super::super::debug::*;
+use super::super::util::*;
+use super::components::*;
 
-const WIDTH: usize = 10;
-const HEIGHT: usize = 10;
-const DEFAULT_STATE: bool = false;
-
-#[derive(Default)]
-struct ImageAssets {
-    dead: Handle<Image>,
-    alive: Handle<Image>
-}
-
-#[derive(Component)]
-struct Cell {
-    is_alive: bool
-}
-
-#[derive(Component)]
-struct Coordinates {
-    i: usize,
-    j: usize
-}
 
 pub struct GridPlugin;
 
@@ -86,12 +68,11 @@ fn press_on_cell(
     if buttons.just_pressed(MouseButton::Left) {
         if let Some(pos) = window.cursor_position() {
             // calculate the position of cell
-            let posx = pos[0] - window.width()/2.;
-            let posy = pos[1] - window.height()/2.;
+            let pos = mouse_to_world_position(window, pos);
             let x_offset: f32 = -(WIDTH as f32 * 16.0) / 2.0 - 8.0;
             let y_offset = (HEIGHT as f32 * 16.0) / 2.0 - 8.0;
-            let i = (posx - x_offset) as f32 / 16.0;
-            let j = HEIGHT as f32 - (y_offset - posy) as f32 / 16.0;
+            let i = (pos[0] - x_offset) as f32 / 16.0;
+            let j = HEIGHT as f32 - (y_offset - pos[1]) as f32 / 16.0;
             let i = i as isize;
             let j = j as isize;
             // change state of cell

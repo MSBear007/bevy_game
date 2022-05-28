@@ -3,7 +3,7 @@ use std::env;
 use bevy::prelude::*;
 
 mod plugins;
-use plugins::square_grid_test::GridPlugin;
+use plugins::square_grid::plugin::GridPlugin;
 use plugins::debug::DebugPlugin;
 
 fn camera_setup(mut commands: Commands) {
