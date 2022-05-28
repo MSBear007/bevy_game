@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use super::debug::*;
 
 const WIDTH: usize = 10;
 const HEIGHT: usize = 10;
@@ -15,6 +16,12 @@ struct Cell {
     is_alive: bool
 }
 
+#[derive(Component)]
+struct Coordinates {
+    i: usize,
+    j: usize
+}
+
 pub struct GridPlugin;
 
 impl Plugin for GridPlugin {
@@ -22,7 +29,8 @@ impl Plugin for GridPlugin {
         app
             .insert_resource(ImageAssets::default())
             .add_startup_system(setup)
-            .add_system(debug_grid)
+            .add_system_set(SystemSet::on_update(DebugState::DebugState)
+                .with_system(debug_changed_cells))
             .add_system(press_on_cell);
     }
 }
@@ -54,16 +62,17 @@ fn setup(mut commands: Commands,
                 ..default()
             }).insert(Cell {
                 is_alive: DEFAULT_STATE
+            }).insert(Coordinates {
+                i, j
             });
         }
     }
 }
 
-fn debug_grid(grid: Query<&Cell>, keys: Res<Input<KeyCode>>) {
-    if keys.just_released(KeyCode::D) {
-        for cell in grid.iter() {
-            print!("{}, ", cell.is_alive)
-        }
+fn debug_changed_cells(changed_cells: Query<(&Cell, &Coordinates), Changed<Cell>>) {
+    use bevy::log::*;
+    for (cell, coordinates) in changed_cells.iter() {
+        debug!("Cell {} at {} {}", cell.is_alive, coordinates.i, coordinates.j);
     }
 }
 
