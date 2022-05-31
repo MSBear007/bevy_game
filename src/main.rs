@@ -3,12 +3,12 @@ use std::env;
 use bevy::prelude::*;
 
 mod plugins;
-use plugins::debug::DebugPlugin;
 use plugins::main_menu::plugin::MainMenuPlugin;
 use plugins::square_grid::plugin::GridPlugin;
+use plugins::debug::DebugPlugin;
 use plugins::states::AppState;
 
-fn camera_setup(mut commands: Commands) {
+fn camera_setup(mut commands: Commands) { 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 }
 
@@ -23,10 +23,11 @@ fn main() {
             });
         }
     }
-    app.add_plugins(DefaultPlugins)
-        .add_startup_system(camera_setup)
-        .add_state(AppState::Grid)
+    app
         .add_plugin(DebugPlugin)
+        .add_plugins(DefaultPlugins)
+        .add_startup_system(camera_setup)
+        .add_state(AppState::MainMenu)
         .add_plugin(GridPlugin)
         .add_plugin(MainMenuPlugin)
         .run();

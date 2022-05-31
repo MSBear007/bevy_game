@@ -1,7 +1,6 @@
 use super::super::states::*;
 use super::super::util::*;
 use super::components::*;
-use bevy::ecs::event::Events;
 use bevy::prelude::*;
 use bevy::window::WindowResized;
 
@@ -12,7 +11,7 @@ impl Plugin for MainMenuPlugin {
         app.insert_resource(MainMenuAssets::default())
             .add_event::<WindowResized>()
             .add_system_set(SystemSet::on_enter(AppState::MainMenu).with_system(setup))
-            .add_system_set(SystemSet::on_update(AppState::MainMenu).with_system(click_on))//.with_system(on_resize::<IsMenuEntity>))
+            .add_system_set(SystemSet::on_update(AppState::MainMenu).with_system(click_on))
             .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(despawn::<IsMenuEntity>));
     }
 }
@@ -120,16 +119,3 @@ fn click_on(
         }
     }
 }
-
-// fn on_resize<T: Component>(
-//     query: Query<Entity, With<T>>,
-//     resize_event: Res<Events<WindowResized>>,
-//     mut commands: Commands
-// ) {
-//     let mut reader = resize_event.get_reader();
-//     for _e in reader.iter(&resize_event) {
-//         for entity in query.iter() {
-//             commands.entity(entity).despawn();
-//         }
-//     }
-// }
